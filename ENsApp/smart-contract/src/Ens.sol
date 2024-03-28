@@ -8,18 +8,17 @@ contract ENS {
         bool isAvailable;
     }
 
-    mapping (bytes32 => ensDomain) byteToUser;
+    mapping (string => ensDomain) byteToUser;
 
-    mapping ( address => bytes32 ) userToBytes;
+    mapping ( address => string ) userToBytes;
 
     ensDomain[] public ensArray;
 
 
-   // register,ownersip, renew,resolve,
 
-   function register(bytes32 _name) public{
-    bytes32 _nameHash = keccak256(abi.encodePacked(_name));
-    if (byteToUser[_nameHash].isAvailable == true){
+   function register(string memory _name) public{
+
+    if (byteToUser[_name].isAvailable == true){
         revert("name not available");
     }
     require(address(0)!= msg.sender, 'invalid address');
@@ -28,19 +27,18 @@ contract ENS {
     ensStore.owner = msg.sender;
     ensStore.isAvailable == false;
 
-    byteToUser[_nameHash].owner = msg.sender;
-    userToBytes[msg.sender] = _nameHash;
+    byteToUser[_name].owner = msg.sender;
+    userToBytes[msg.sender] = _name;
 
     ensArray.push(ensStore);
 }
 
 
-    function getEnsAddress(bytes32 _name) public view returns(address) {
-        bytes32 _nameHash = keccak256(abi.encodePacked(_name));
-        return byteToUser[_nameHash].owner;
+    function getEnsAddress(string memory _name) public view returns(address) {
+        return byteToUser[_name].owner;
     }
 
-    function getEnsName( address owner) public view returns(bytes32) {
+    function getEnsName( address owner) public view returns(string memory) {
         return userToBytes[owner];
     }
  

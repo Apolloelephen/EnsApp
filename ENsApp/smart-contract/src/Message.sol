@@ -1,7 +1,12 @@
-// SPDX-License-Identifier: MIT
-pragma solidity ^0.8.18;
+// SPDX-License-Identifier: UNLICENSED
+pragma solidity ^0.8.13;
+import {IENS} from "./IENS.sol";
+
+
+
 
 contract Chat {
+    
     
     struct Message {
         uint256 id;
@@ -19,10 +24,12 @@ contract Chat {
     constructor(address _ensAddress) {
         ensAddress = _ensAddress;
     }
+    IENS ens = IENS(ensAddress);
 
     Message[] public messageArray;
 
     function sendMessage(string memory _text, address _reciever) public {
+        require(address(ens) == msg.sender, "you dot have a ens");
 
         uint256 Txtid = MSGid += 1;
         require(msg.sender != address(0), "invalid address");
